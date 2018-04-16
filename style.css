@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+html{
+    margin: 0px;
+    padding: 0px;
+}
+
+body{
+    margin: 0px;
+    padding: 0px;
+}
+
+#select{
+    background-color: #ffffaa;
+}
+
+#field{
+    display: none;
+}
