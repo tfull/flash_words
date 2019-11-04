@@ -1,4 +1,4 @@
-(function(){
+(function() {
     var delimiter = "\t";
     var extension = ".tsv";
     var data_directory = "data"
@@ -7,30 +7,30 @@
     var words_index = 0;
     var words_mode = "word";
 
-    function setWord(){
+    function setWord() {
         var record = words[words_index];
         var field = document.getElementById("field");
-        if(words_mode == "word"){
+        if (words_mode == "word") {
             field.innerText = record["word"];
-        }else{
+        } else {
             field.innerText = record["meaning"];
         }
     }
 
-    function switchMode(mode){
+    function switchMode(mode) {
         var menu = document.getElementById("menu");
         var field = document.getElementById("field");
-        if(mode == "menu"){
+        if (mode == "menu") {
             menu.style.display = "block";
             field.style.display = "none";
-        }else{
+        } else {
             field.style.display = "block";
             menu.style.display = "none";
         }
     }
 
-    function fisheryates(array){
-        for(var i = array.length - 1; i > 0; i--){
+    function fisheryates(array) {
+        for (var i = array.length - 1; i > 0; i--) {
             var r = Math.floor(Math.random() * (i + 1));
             var tmp = array[i];
             array[i] = array[r];
@@ -38,16 +38,16 @@
         }
     }
 
-    function parseFileText(text){
+    function parseFileText(text) {
         var lines = text.replace(/^\s+|\s+$/g, '').split(/\r?\n/g);
         var columns = lines[0].split(delimiter);
         var column_number = columns.length;
         var records = [];
 
-        for(var i = 1; i < lines.length; i++){
+        for (var i = 1; i < lines.length; i++) {
             var items = lines[i].split(delimiter);
             var record = {};
-            for(var j = 0; j < column_number; j++){
+            for (var j = 0; j < column_number; j++) {
                 record[columns[j]] = items[j];
             }
             records.push(record);
@@ -55,14 +55,14 @@
         return records;
     }
 
-    function loadWords(name){
+    function loadWords(name) {
         var filename = name + extension;
 
         var req = new XMLHttpRequest();
 
-        req.onreadystatechange = function(){
-            if(req.readyState == 4){
-                if(req.status == 200){
+        req.onreadystatechange = function() {
+            if (req.readyState == 4) {
+                if (req.status == 200) {
                     var text = req.responseText;
                     var records = parseFileText(text);
                     fisheryates(records);
@@ -79,19 +79,19 @@
         req.send(null);
     }
 
-    function loadMenu(text){
+    function loadMenu(text) {
         var menu = document.getElementById("menu");
 
         var records = parseFileText(text);
 
-        for(var i = 0; i < records.length; i++){
+        for (var i = 0; i < records.length; i++) {
             var record = records[i];
             var div = document.createElement("div");
             div.appendChild(document.createTextNode(record["label"]));
             div.classList.add("option");
-            (function(){
+            (function() {
                 var item = record["name"];
-                div.onclick = function(){
+                div.onclick = function() {
                     loadWords(data_directory + "/" + item);
                 };
             })();
@@ -99,12 +99,12 @@
         }
     }
 
-    function initializeMenu(){
+    function initializeMenu() {
         var req = new XMLHttpRequest();
 
-        req.onreadystatechange = function(){
-            if(req.readyState == 4){
-                if(req.status == 200){
+        req.onreadystatechange = function() {
+            if (req.readyState == 4) {
+                if (req.status == 200) {
                     var text = req.responseText;
                     loadMenu(text);
                 }
@@ -115,26 +115,34 @@
         req.send(null);
     }
 
-    window.onload = function(){
+    window.onload = function() {
         initializeMenu();
 
-        document.onkeydown = function(event){
+        document.onkeydown = function(event) {
             key = event.keyCode;
-            if(key == 39 || key == 76){
-                if(words_index < words.length - 1){
+
+            if (key == 39 || key == 76) {
+                if (words_index < words.length - 1) {
                     words_index += 1;
                 }
-            }else if(key == 37 || key == 72){
-                if(words_index > 0){
+            } else if (key == 37 || key == 72) {
+                if (words_index > 0) {
                     words_index -= 1;
                 }
-            }else{
+            } else {
                 words_mode = "meaning";
+                var debug = document.getElementById("debug");
+                debug.innerText = String(key);
             }
+
             setWord();
+
+            if (key == 8) {
+                return false;
+            }
         };
 
-        document.onkeyup = function(){
+        document.onkeyup = function() {
             words_mode = "word";
             setWord();
         }

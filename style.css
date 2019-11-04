@@ -6,8 +6,9 @@ html{
 }
 
 body{
-    margin: 0px;
+    margin: 0px auto;
     padding: 0px;
+    width: 980px;
 }
 
 #menu{
@@ -15,6 +16,8 @@ body{
 }
 
 #menu .option{
+    margin: 5px 0px;
+    padding: 5px 10px;
     background-color: pink;
 }
 
